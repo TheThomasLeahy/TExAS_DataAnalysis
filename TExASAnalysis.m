@@ -215,11 +215,7 @@ for  s = 1:length(listOfBiaxFolders)
     end
 end
 
-%Assemble list of same tests
-
-
-
-
+%Assemble list of same tests for 
 
 
 close all; clc;
