@@ -75,6 +75,7 @@ end
 pinD = .00225; %Pin diameter is 2.25 mm
 pinA = 9*(pi*((pinD/2)^2)); %9 pins
 
+
 for i = 1: numberOfDataFolders
     testName = char(finalStr(i));
         
@@ -117,6 +118,9 @@ for i = 1: numberOfDataFolders
                 legend(cycleString, 'Location', 'southeast');
                 hold off;
             end
+            
+            zeroLoad(i,x) = stressData(1);
+            
         end
     end
     
@@ -144,6 +148,8 @@ for i = 1: numberOfDataFolders
                 legend(cycleString, 'Location', 'southeast');
                 hold off;
             end
+            
+            zeroLoad(i,x) = stressData(1);
             
         end
     end
@@ -181,6 +187,10 @@ for i = 1: numberOfDataFolders
                 legend(cycleString, 'Location', 'southeast');
                 hold off;
             end 
+            
+            zeroLoad(i,2*(x-1)+1) = stressData_1(1);
+            zeroLoad(i,2*(x-1)+2) = stressData_2(1);
+            
         end
     end    
 end
@@ -190,21 +200,68 @@ cd(folder_name);
 
 lastSlash = max(strfind(folder_name, '\'));
 desiredFileName = folder_name(lastSlash+1:length(folder_name));
-desiredFileName = strcat(folder_name, '/', desiredFileName, '_BasicStrainCurves');
+desiredFileName = strcat(folder_name, '/', desiredFileName, '_BasicStressStrainCurves');
 
 savefig(h,desiredFileName);
+close all;
+%Save stress/strain graphs and close them
 
-%listOfDataFolders contains an array of strings of all files containing
-%data that needs to be analyzed. Doesn't matter if it is within a protocol
-%folder or not, it will be in this array.
+%% Now we begin our lowest point, zero load plots
 
-%%Commented out for now, just working on first part!
+for i = 1: numberOfDataFolders
+    testName = char(finalStr(i));
+    testName = [testName, '_LowestPointGraph'];
+    h(i) = figure('Name', testName);
+    
+    if unibi_testType(i) == testType.Uniaxial_Tension
+        index = 1:length(zeroLoad(i,:));
+        scatter(index,zeroLoad(i,:)); 
+        
+        firstlegend = testName(1:3);
+        legend(firstlegend);
+        
+    end
+    
+    if unibi_testType(i) == testType.Uniaxial_Shear
+        index = 1:length(zeroLoad(i,:));
+        scatter(index,zeroLoad(i,:));
+        
+        firstlegend = testName(1:3);
+        legend(firstlegend);
+    end
+    
+    if unibi_testType(i) == testType.Biaxial
+        index = 1:length(zeroLoad(i,:))/2;
+        for x = 1:2:length(zeroLoad)
+            zeroLoad1 = zeroLoad(x);
+            zeroLoad2 = zeroLoad(x+1);
+        end
+        scatter(index,zeroLoad1);
+        hold on;
+        scatter(index,zeroLoad2);
+        hold off; 
+        
+        secondX = max(strfind(testName, 'X'));
+        firstlegend = testName(1:3);
+        secondlegend = testName(secondX:secondX+2);
+        legend(firstlegend, secondlegend);
+    end
+    
+    title('Lowest Stress Graph');
+    xlabel('Cycle');
+    ylabel('Stress (kPa)');
+end
+
+
+
+%% Now we begin our same deformation, different extension graphs
+
 %{
 
 listOfBiaxFolders = [];
 for s = 1:numberOfDataFolders
-    if(length(strfind(listOfDataFolders(s), 'X')) > 1)
-        listOfBiaxFolders = [listOfBiaxFolders listOfDataFolders(i)];
+    if(length(strfind(finalStr(s), 'X')) > 1)
+        listOfBiaxFolders = [listOfBiaxFolders listOfDataFolders(s)];
     end
 end
 
@@ -213,32 +270,42 @@ for  s = 1:length(listOfBiaxFolders)
     if(~isEmpty(length(strfind(listOfBiaxFolder(s),'X1T'))))
         xVals(s,1) = true;
     end
-    if(~isEmpty(length(strfind(listOfBiaxFolder(s),'X1T'))))
+    if(~isEmpty(length(strfind(listOfBiaxFolder(s),'X1C'))))
         xVals(s,2) = true;
     end
-    if(~isEmpty(length(strfind(listOfBiaxFolder(s),'X1T'))))
+    if(~isEmpty(length(strfind(listOfBiaxFolder(s),'X2T'))))
         xVals(s,3) = true;
     end
-    if(~isEmpty(length(strfind(listOfBiaxFolder(s),'X1T'))))
+    if(~isEmpty(length(strfind(listOfBiaxFolder(s),'X2C'))))
         xVals(s,4) = true;
     end
-    if(~isEmpty(length(strfind(listOfBiaxFolder(s),'X1T'))))
+    if(~isEmpty(length(strfind(listOfBiaxFolder(s),'X3T'))))
         xVals(s,5) = true;
     end
-    if(~isEmpty(length(strfind(listOfBiaxFolder(s),'X1T'))))
+    if(~isEmpty(length(strfind(listOfBiaxFolder(s),'X3C'))))
         xVals(s,6) = true;
     end
 end
 
-%Assemble list of same tests for 
+%Assemble list of same tests for all tests in the same folder
+%For example, we only want to plot the graphs on the same plot if they were
+%a part of the same protocol
 
+initFoldString = strArray(1, 1:lastslash(1));
+initIndex = 1;
+for  s = 2:length(listOfBiaxFolders)
+    if strArray(s, 1:lastSlash(s)) == initFoldString
+        if xVals(initIndex) == xVals(s)
+            sameTestAs(s) = initIndex;
+        end
+    else
+        initFoldString = strArray(s, 1:lastslash(s));
+        initIndex = s;
+    end
+end
 
 %close all; 
 clc;
 cd(currentFolder);
-
-
-%Need to label charts/pages
-%Need to output mod data to excel spreadsheet and figures
 
 %}
