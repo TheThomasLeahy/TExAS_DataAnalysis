@@ -78,7 +78,8 @@ pinA = 9*(pi*((pinD/2)^2)); %9 pins
 
 for i = 1: numberOfDataFolders
     testName = char(finalStr(i));
-        
+    clear cycleString;
+    
     cd(strArray(i,:));
     files = dir('*.csv'); %lists all csv files from subdirectory
     outs = cell(1,(numel(files)/2)); %Creates cell matrix for every _SIMP file
@@ -107,7 +108,7 @@ for i = 1: numberOfDataFolders
             
             hold on;
             stressData = stressData./1000;
-            plot(strainData,stressData);
+            plot(strainData,stressData, 'LineWidth',2);
             
             cycleString(x,:) = ['Cycle ',num2str(x)];
             
@@ -131,19 +132,21 @@ for i = 1: numberOfDataFolders
             cycleDataSize = size(cycleData);
             
             strainData = cycleData(:,2);
-            forceData = cycleData(:,min(cycleDataSize));
+            strainData = atand(strainData);
             
+            
+            forceData = cycleData(:,min(cycleDataSize));
             stressData = forceData./pinA;
             stressData = stressData./1000;
             
             hold on;
-            plot(strainData,stressData);
+            plot(strainData,stressData, 'LineWidth',2);
             
             cycleString(x,:) = ['Cycle ',num2str(x)];
             
             if(x == length(outs)) 
                 %Plotted everything! Let's format!
-                xlabel('Shear strain');
+                xlabel('Shear Angle (Degrees)');
                 ylabel('Stress (kPa)');
                 legend(cycleString, 'Location', 'southeast');
                 hold off;
@@ -178,12 +181,12 @@ for i = 1: numberOfDataFolders
             stressData_2 = stressData_2./1000;
  
             hold on;
-            plot(strainData_1,stressData_1);
-            plot(strainData_2,stressData_2);
+            plot(strainData_1,stressData_1, 'LineWidth',2);
+            plot(strainData_2,stressData_2, 'LineWidth',2);
             
             if(x == length(outs)) %Plot legend only on the first graph
                 xlabel('Extension Ratio');
-                ylabel('Stress (Pa)');
+                ylabel('Stress (kPa)');
                 legend(cycleString, 'Location', 'southeast');
                 hold off;
             end 
@@ -209,13 +212,15 @@ close all;
 %% Now we begin our lowest point, zero load plots
 
 for i = 1: numberOfDataFolders
+    clear index;
+    
     testName = char(finalStr(i));
     testName = [testName, '_LowestPointGraph'];
     h(i) = figure('Name', testName);
     
     if unibi_testType(i) == testType.Uniaxial_Tension
-        index = 1:length(zeroLoad(i,:));
-        scatter(index,zeroLoad(i,:)); 
+        index = 1:find(zeroLoad(i,:) == 0, 1) - 1;
+        scatter(index,zeroLoad(i,1:max(index))); 
         
         firstlegend = testName(1:3);
         legend(firstlegend);
@@ -223,18 +228,26 @@ for i = 1: numberOfDataFolders
     end
     
     if unibi_testType(i) == testType.Uniaxial_Shear
-        index = 1:length(zeroLoad(i,:));
-        scatter(index,zeroLoad(i,:));
+        index = 1:find(zeroLoad(i,:) == 0, 1)-1;
+        scatter(index,zeroLoad(i,1:max(index)));
         
         firstlegend = testName(1:3);
         legend(firstlegend);
     end
     
     if unibi_testType(i) == testType.Biaxial
-        index = 1:length(zeroLoad(i,:))/2;
-        for x = 1:2:length(zeroLoad)
-            zeroLoad1 = zeroLoad(x);
-            zeroLoad2 = zeroLoad(x+1);
+        clear zeroLoad1 zeroload2;
+        
+        ind = 1;
+        if isempty(find(zeroLoad(i,1:5) == 0, 1))
+            index = 1:length(zeroLoad(i,:))/2;
+        else
+            index = 1:((find(zeroLoad(i,:) == 0, 1)-1)/2);
+        end 
+        for x = 1:2:length(zeroLoad(i,:))
+            zeroLoad1(ind) = zeroLoad(i,x);
+            zeroLoad2(ind) = zeroLoad(i,x+1);
+            ind = ind + 1;
         end
         scatter(index,zeroLoad1);
         hold on;
@@ -252,7 +265,11 @@ for i = 1: numberOfDataFolders
     ylabel('Stress (kPa)');
 end
 
-
+lastSlash = max(strfind(folder_name, '\'));
+desiredFileName = folder_name(lastSlash+1:length(folder_name));
+desiredFileName = strcat(folder_name, '/', desiredFileName, '_ZeroPointLowestStressPlots');
+savefig(h,desiredFileName);
+close all;
 
 %% Now we begin our same deformation, different extension graphs
 
