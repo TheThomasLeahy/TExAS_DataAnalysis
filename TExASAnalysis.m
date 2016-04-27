@@ -120,7 +120,7 @@ for i = 1: numberOfDataFolders
                 hold off;
             end
             
-            zeroLoad(i,x) = stressData(1);
+            zeroLoad(i,x) = mean(stressData(1:15));
             
         end
     end
@@ -152,7 +152,7 @@ for i = 1: numberOfDataFolders
                 hold off;
             end
             
-            zeroLoad(i,x) = stressData(1);
+            zeroLoad(i,x) = mean(stressData(1:15));
             
         end
     end
@@ -191,8 +191,8 @@ for i = 1: numberOfDataFolders
                 hold off;
             end 
             
-            zeroLoad(i,2*(x-1)+1) = stressData_1(1);
-            zeroLoad(i,2*(x-1)+2) = stressData_2(1);
+            zeroLoad(i,2*(x-1)+1) = mean(stressData_1(1:15));
+            zeroLoad(i,2*(x-1)+2) = mean(stressData_2(1:15));
             
         end
     end    
