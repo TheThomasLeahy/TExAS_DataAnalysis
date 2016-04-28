@@ -122,6 +122,8 @@ for i = 1: numberOfDataFolders
             
             zeroLoad(i,x) = mean(stressData(1:15));
             
+            zeroStrainindex = find((stressData(i,:)>-0.0005) && (stressData(i,:)<-0.0005), 1);
+            zeroStrainPoint(i,x) = strainData(i,zeroStrainindex);
         end
     end
     
@@ -153,6 +155,9 @@ for i = 1: numberOfDataFolders
             end
             
             zeroLoad(i,x) = mean(stressData(1:15));
+            
+            zeroStrainindex = find((stressData(i,:)>-0.0005) && (stressData(i,:)<-0.0005), 1);
+            zeroStrainPoint(i,x) = strainData(i,zeroStrainindex);
             
         end
     end
@@ -194,6 +199,11 @@ for i = 1: numberOfDataFolders
             zeroLoad(i,2*(x-1)+1) = mean(stressData_1(1:15));
             zeroLoad(i,2*(x-1)+2) = mean(stressData_2(1:15));
             
+            zeroStrainindex1 = find((stressData_1(i,:)>-0.0005) && (stressData_1(i,:)<-0.0005), 1);
+            zeroStrainindex2 = find((stressData_2(i,:)>-0.0005) && (stressData_2(i,:)<-0.0005), 1);
+            zeroStrainPoint(i,2*(x-1)+1) = strainData_1(i,zeroStrainindex1);
+            zeroStrainPoint(i,2*(x-1)+1) = strainData_2(i,zeroStrainindex2);
+            
         end
     end    
 end
@@ -215,7 +225,7 @@ for i = 1: numberOfDataFolders
     clear index;
     
     testName = char(finalStr(i));
-    testName = [testName, '_LowestPointGraph'];
+    testName = [testName, '_StartingStressGraph'];
     h(i) = figure('Name', testName);
     
     if unibi_testType(i) == testType.Uniaxial_Tension
@@ -267,12 +277,76 @@ end
 
 lastSlash = max(strfind(folder_name, '\'));
 desiredFileName = folder_name(lastSlash+1:length(folder_name));
-desiredFileName = strcat(folder_name, '/', desiredFileName, '_ZeroPointLowestStressPlots');
+desiredFileName = strcat(folder_name, '/', desiredFileName, '_LowestStressPlots');
 savefig(h,desiredFileName);
 close all;
 
 %% Graph point at which stretch equals 0. 
 
+for i = 1: numberOfDataFolders
+    clear index;
+    
+    testName = char(finalStr(i));
+    testName = [testName, '_ZeroStressGraph'];
+    h(i) = figure('Name', testName);
+    
+    if unibi_testType(i) == testType.Uniaxial_Tension
+        index = 1:find(zeroStrainPoint(i,:) == 0, 1) - 1;
+        scatter(index,zeroStrainPoint(i,1:max(index))); 
+        
+        firstlegend = testName(1:3);
+        legend(firstlegend);
+        
+        ylabel('Extension Ratio');
+    end
+    
+    if unibi_testType(i) == testType.Uniaxial_Shear
+        index = 1:find(zeroStrainPoint(i,:) == 0, 1)-1;
+        scatter(index,zeroStrainPoint(i,1:max(index)));
+        
+        firstlegend = testName(1:3);
+        legend(firstlegend);
+        
+        ylabel('Shear Angle (Degrees)');
+    end
+    
+    if unibi_testType(i) == testType.Biaxial
+        clear zeroLoad1 zeroload2;
+        
+        ind = 1;
+        if isempty(find(zeroStrainPoint(i,1:5) == 0, 1))
+            index = 1:length(zeroLoad(i,:))/2;
+        else
+            index = 1:((find(zeroStrainPoint(i,:) == 0, 1)-1)/2);
+        end 
+        for x = 1:2:length(zeroLoad(i,:))
+            zeroStrainPoint1(ind) = zeroStrainPoint(i,x);
+            zeroStrainPoint2(ind) = zeroStrainPoint(i,x+1);
+            ind = ind + 1;
+        end
+        scatter(index,zeroStrainPoint1);
+        hold on;
+        scatter(index,zeroStrainPoint2);
+        hold off; 
+        
+        secondX = max(strfind(testName, 'X'));
+        firstlegend = testName(1:3);
+        secondlegend = testName(secondX:secondX+2);
+        legend(firstlegend, secondlegend);
+        
+        ylabel('Extension Ratio');
+    end
+    
+    title('Zero Stress Point Graph');
+    xlabel('Cycle');
+    
+end
+
+lastSlash = max(strfind(folder_name, '\'));
+desiredFileName = folder_name(lastSlash+1:length(folder_name));
+desiredFileName = strcat(folder_name, '/', desiredFileName, '_ZeroStressPlots');
+savefig(h,desiredFileName);
+close all;
 
 
 
