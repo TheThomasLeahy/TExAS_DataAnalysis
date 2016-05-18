@@ -446,7 +446,6 @@ end
 %be plotted on the same one. These indeces are referring to the original
 %ones used in part one.
 
-clear h;
 for i = 1:size(indArray,1)
     cd(strArray(indArray(i,1),:));
     files1 = dir('*.csv'); %lists all csv files from subdirectory
@@ -470,6 +469,15 @@ for i = 1:size(indArray,1)
     
     %outs1 and outs2 is a cell array that contains all csv data from all cycles (the
     %SIMP versions of the data)
+    
+    %Opens figure titled after the test name
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%
+    %RENAME ME
+    %h(i) = figure('Name', testName);
+    %%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%
     
     figInd = 1;
     if unibi_testType(indArray(i,1)) == testType.Uniaxial_Tension
@@ -507,9 +515,9 @@ for i = 1:size(indArray,1)
             undVals = undVals{1};
             name = finalStr(indArray(i,1));
             name = name{1};
-            name = [name(1:undVals(1)-1) ' - Trial ' num2str(x)];
+            name = [name(1:undVals(1)) ' - Trial ' x];
             
-            h(figInd) = figure('Name', name);
+            h(figInd) = figure('Name', name, 'Interpreter', 'none');
             figInd = figInd + 1;
             
             hold on;
@@ -559,9 +567,9 @@ for i = 1:size(indArray,1)
             undVals = undVals{1};
             name = finalStr(indArray(i,1));
             name = name{1};
-            name = [name(1:undVals(1)-1) ' - Trial ' num2str(x)];
+            name = [name(1:undVals(1)) ' - Trial ' num2str(x)];
             
-            h(figInd) = figure('Name', name);
+            h(figInd) = figure('Name', name, 'Interpreter', 'none');
             figInd = figInd + 1;
             
             hold on;
@@ -622,9 +630,9 @@ for i = 1:size(indArray,1)
             undVals = undVals{1};
             name = finalStr(indArray(i,1));
             name = name{1};
-            name = [name(1:undVals(1)) name(undVals(2)+1:undVals(3)-1) ' - Trial ' num2str(x)];
+            name = [name(1:undVals(1)) ' - ' name(undVals(2)+1:undVals(3)) ' - Trial ' num2str(x)];
             
-            h(figInd) = figure('Name', name);
+            h(figInd) = figure('Name', name, 'Interpreter', 'none');
             figInd = figInd + 1;
             
             hold on;
@@ -642,16 +650,10 @@ for i = 1:size(indArray,1)
     end
 end
 
-lastSlash = max(strfind(folder_name, '\'));
-desiredFileName = folder_name(lastSlash+1:length(folder_name));
-desiredFileName = strcat(folder_name, '/', desiredFileName, '_SameDef-DiffExt');
-savefig(h,desiredFileName);
-close all;
 
 
-%%Done with program - Let's Clean up!
+%close all;
 clc;
 cd(currentFolder);
-clear all;
 
 
