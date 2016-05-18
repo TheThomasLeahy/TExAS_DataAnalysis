@@ -122,7 +122,7 @@ for i = 1: numberOfDataFolders
             
             zeroLoad(i,x) = mean(stressData(1:15));
             
-            zeroStrainindex = find((stressData(i,:)>-0.0005) && (stressData(i,:)<-0.0005), 1);
+            zeroStrainindex = find((stressData(i,:)>-20) && (stressData(i,:)<20), 1);
             zeroStrainPoint(i,x) = strainData(i,zeroStrainindex);
         end
     end
@@ -156,7 +156,7 @@ for i = 1: numberOfDataFolders
             
             zeroLoad(i,x) = mean(stressData(1:15));
             
-            zeroStrainindex = find((stressData(i,:)>-0.0005) && (stressData(i,:)<-0.0005), 1);
+            zeroStrainindex = find((stressData(i,:)>-20) && (stressData(i,:)<20), 1);
             zeroStrainPoint(i,x) = strainData(i,zeroStrainindex);
             
         end
@@ -199,11 +199,10 @@ for i = 1: numberOfDataFolders
             zeroLoad(i,2*(x-1)+1) = mean(stressData_1(1:15));
             zeroLoad(i,2*(x-1)+2) = mean(stressData_2(1:15));
             
-            zeroStrainindex1 = find((stressData_1(i,:)>-0.0005) && (stressData_1(i,:)<-0.0005), 1);
-            zeroStrainindex2 = find((stressData_2(i,:)>-0.0005) && (stressData_2(i,:)<-0.0005), 1);
+            zeroStrainindex1 = find((stressData_1(i,:)>-20) && (stressData_1(i,:)<20), 1);
+            zeroStrainindex2 = find((stressData_2(i,:)>-20) && (stressData_2(i,:)<20), 1);
             zeroStrainPoint(i,2*(x-1)+1) = strainData_1(i,zeroStrainindex1);
-            zeroStrainPoint(i,2*(x-1)+1) = strainData_2(i,zeroStrainindex2);
-            
+            zeroStrainPoint(i,2*(x-1)+2) = strainData_2(i,zeroStrainindex2);
         end
     end    
 end
