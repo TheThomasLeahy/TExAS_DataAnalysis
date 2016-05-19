@@ -7,11 +7,23 @@
 
 clear all; close all; clc;
 
-% User Input
+%% Filter Design
+
+%Creating a "taps"-tap averaging filter
+taps = 10;
+B = 1/taps;
+B = repmat(B,1,taps);
+A = 1;
+% to filter vector x, 
+
+
+%% User Input
 currentFolder = pwd(); %% Stores current folder to restore later
 
 folder_name = uigetdir; %%Gets input folder name from the user (through folder explorer GUI)
 allSubFolders = genpath(folder_name); %%File path for all subfolders (including empty ones) of the user input folder
+
+
 
 % Parse into a cell array.
 remain = allSubFolders;
@@ -37,7 +49,7 @@ for i=1:numberOfFolders
 end
 numberOfDataFolders = length(listOfDataFolders);
 
-%%Data Analysis
+%% Simple Stress/Strain Plots
 
 %listOfDataFolders contains an array of strings of all folders containing
 %data that needs to be analyzed. Doesn't matter if it is within a protocol
@@ -115,6 +127,7 @@ for i = 1: numberOfDataFolders
             if(x == length(outs))
                 %Plotted everything! Let's format!
                 xlabel('Extension Ratio');
+
                 ylabel('Stress (kPa)');
                 legend(cycleString, 'Location', 'southeast');
                 hold off;
