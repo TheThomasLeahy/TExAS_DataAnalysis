@@ -129,7 +129,7 @@ for i = 1: numberOfDataFolders
                 %Plotted everything! Let's format!
                 xlabel('Extension Ratio');
 
-                ylabel('Stress (kPa)');
+                ylabel('Tensile Stress (kPa)');
                 legend(cycleString, 'Location', 'southeast');
                 hold off;
             end
@@ -162,7 +162,7 @@ for i = 1: numberOfDataFolders
             if(x == length(outs))
                 %Plotted everything! Let's format!
                 xlabel('Shear Angle (Degrees)');
-                ylabel('Stress (kPa)');
+                ylabel('Shear Stress (kPa)');
                 legend(cycleString, 'Location', 'southeast');
                 hold off;
             end
@@ -206,7 +206,7 @@ for i = 1: numberOfDataFolders
             
             if(x == length(outs)) %Plot legend only on the first graph
                 xlabel('Extension Ratio');
-                ylabel('Stress (kPa)');
+                ylabel('Tensile Stress (kPa)');
                 legend(cycleString, 'Location', 'southeast');
                 hold off;
             end
@@ -536,7 +536,7 @@ for i = 1:size(indArray,1)
             hold off;
             
             xlabel('Extension Ratio');
-            ylabel('Stress (kPa)');
+            ylabel('Tensile Stress (kPa)');
             legend({legendData}, 'Location', 'southeast','Interpreter', 'none');
         end
     end
@@ -591,7 +591,7 @@ for i = 1:size(indArray,1)
             hold off;
             
             xlabel('Extension Ratio');
-            ylabel('Stress (kPa)');
+            ylabel('Shear Stress (kPa)');
             legend({legendData}, 'Location', 'southeast','Interpreter', 'none');
             
         end
@@ -662,7 +662,7 @@ for i = 1:size(indArray,1)
             hold off;
             
             xlabel('Extension Ratio');
-            ylabel('Stress (kPa)');
+            ylabel('Tensile Stress (kPa)');
             legend({legendData}, 'Location', 'southeast','Interpreter', 'none');
             
         end
