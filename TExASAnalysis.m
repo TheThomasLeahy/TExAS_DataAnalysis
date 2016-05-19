@@ -117,8 +117,7 @@ for i = 1: numberOfDataFolders
             stressData = forceData./pinA;
             stressData = stressData./1000;
             
-            stressData_filt = filter(B,A,stressData);
-            stressData = [stressData(1:taps); stressData_filt(taps+1:end)];
+            stressData = filter(B,A,stressData);
             
             
             hold on;
@@ -153,8 +152,7 @@ for i = 1: numberOfDataFolders
             stressData = forceData./pinA;
             stressData = stressData./1000;
             
-            stressData_filt = filter(B,A,stressData);
-            stressData = [stressData(1:taps); stressData_filt(taps+1:end)];
+            stressData = filter(B,A,stressData);
             
             hold on;
             plot(strainData,stressData, 'LineWidth',2);
@@ -199,10 +197,8 @@ for i = 1: numberOfDataFolders
             stressData_1 = stressData_1./1000;
             stressData_2 = stressData_2./1000;
             
-            stressData_1_filt = filter(B,A,stressData_1);
-            stressData_1 = [stressData_1(1:taps); stressData_1_filt(taps+1:end)];
-            stressData_2_filt = filter(B,A,stressData_2);
-            stressData_2 = [stressData_2(1:taps); stressData_2_filt(taps+1:end)];
+            stressData_1 = filter(B,A,stressData_1);
+            stressData_2 = filter(B,A,stressData_2);
             
             hold on;
             plot(strainData_1,stressData_1, 'LineWidth',2);
@@ -508,10 +504,8 @@ for i = 1:size(indArray,1)
             stressData2 = forceData2./pinA;
             stressData2 = stressData2./1000;
 
-            stressData1_filt = filter(B,A,stressData1);
-            stressData1 = [stressData1(1:taps); stressData1_filt(taps + 1:end)];
-            stressData2_filt = filter(B,A,stressData2);
-            stressData2 = [stressData2(1:taps); stressData2_filt(taps + 1:end)];
+            stressData1 = filter(B,A,stressData1);
+            stressData2 = filter(B,A,stressData2);
             
             legendVal1 = strfind(finalStr(indArray(i,1)), '_');
             legendVal1 = legendVal1{1};
@@ -566,10 +560,8 @@ for i = 1:size(indArray,1)
             stressData2 = forceData2./pinA;
             stressData2 = stressData2./1000;
             
-            stressData1_filt = filter(B,A,stressData1);
-            stressData2_filt = filter(B,A,stressData2);
-            stressData1 = [stressData1(1:taps); stressData1_filt(taps + 1:end)];
-            stressData2 = [stressData2(1:taps); stressData2_filt(taps + 1:end)];
+            stressData1 = filter(B,A,stressData1);
+            stressData2 = filter(B,A,stressData2);
             
             legendVal1 = strfind(finalStr(indArray(i,1)), '_');
             legendVal1 = legendVal1{1};
@@ -631,15 +623,11 @@ for i = 1:size(indArray,1)
             stressData2_1 = stressData2_1./1000;
             stressData2_2 = stressData2_2./1000;
    
-            stressData1_1_filt = filter(B,A,stressData1_1);
-            stressData1_2_filt = filter(B,A,stressData1_2);
-            stressData2_1_filt = filter(B,A,stressData2_1);
-            stressData2_2_filt = filter(B,A,stressData2_2);
-            
-            stressData1_1 = [stressData1_1(1:taps); stressData1_1_filt(taps + 1:end)];
-            stressData1_2 = [stressData1_2(1:taps); stressData1_2_filt(taps + 1:end)];
-            stressData2_1 = [stressData2_1(1:taps); stressData2_1_filt(taps + 1:end)];
-            stressData2_2 = [stressData2_2(1:taps); stressData2_2_filt(taps + 1:end)];
+            stressData1_1 = filter(B,A,stressData1_1);
+            stressData1_2 = filter(B,A,stressData1_2);
+            stressData2_1 = filter(B,A,stressData2_1);
+            stressData2_2 = filter(B,A,stressData2_2);
+
             
             legendVal1 = strfind(finalStr(indArray(i,1)), '_');
             legendVal1 = legendVal1{1};
