@@ -6,7 +6,7 @@
 %Code by Thomas Leahy and Elizabeth Shih
 
 clear all; close all; clc;
-
+%Commit Test
 %% Filter Design
 
 %Creating a "taps"-tap averaging filter
